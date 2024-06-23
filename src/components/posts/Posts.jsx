@@ -1,7 +1,17 @@
 import Post from "../post/Post"
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./posts.css"
 
-export default function Posts({ posts }) {
+export default function Posts() {
+  const [posts, setPosts] = useState([]);
+  const fetchPosts = async () => {
+    const res = await axios.get("/posts")
+    setPosts(res.data)
+  }
+  useEffect(() => {
+    fetchPosts();
+  }, [])
   // console.log(posts);
   return (
     <div className="posts">
