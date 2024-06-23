@@ -1,13 +1,15 @@
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import "./singlepost.css"
 import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import { Link } from "react-router-dom"
 import { Context } from "../../context/Context"
 import { BACKEND_URL } from "../../CONST"
+import toast from "react-hot-toast"
 
 
 export default function SinglePost() {
+    const navigate = useNavigate()
     const location = useLocation()
     const path = location.pathname.split("/")[2];
     const [post, setPost] = useState({});
@@ -31,10 +33,12 @@ export default function SinglePost() {
             await axios.delete(`${BACKEND_URL}/posts/${post._id}`, {
                 data: { username: user.username },
             });
-            window.location.replace("/")
+            // window.location.replace("/")
+            navigate('/')
+            toast.success(`${post.title} deleted succesfully`)
 
         } catch (err) {
-
+            toast.error("Error occured while deleting")
         }
     };
     const handleUpdate = async () => {

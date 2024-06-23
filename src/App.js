@@ -18,18 +18,18 @@ import { Context } from "./context/Context";
 
 
 function App() {
-  const {user}=useContext(Context);
+  const { user } = useContext(Context);
   return (
     <Router>
-      <TopBar/>
+      <TopBar />
       <Routes>
-      <Route exact path="/" element={<Home/>} />
-      <Route exact path="/register" element={user?<Home/>:<Register/>} />
-      <Route exact path="/login" element={user?<Home/>:<Login/>} />
-      <Route exact path="/write" element={user?<Write/>:<Register/>} />
-      <Route exact path="/settings" element={user?<Settings/>:<Register/>} />
-      <Route exact path="/post/:postId" element={<Single/>} />
-    </Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route exact path="/register" element={user ? <Home /> : <Register />} />
+        <Route exact path="/login" element={user ? <Home /> : <Login />} />
+        <Route exact path="/write" element={user ? <Write /> : <Register />} />
+        <Route exact path="/settings" element={user ? <Settings /> : <Register />} />
+        <Route exact path="/post/:postId" element={<Single />} />
+      </Routes>
     </Router>
   );
 }

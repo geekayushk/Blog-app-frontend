@@ -1,29 +1,40 @@
 import { useState } from "react"
 import "./register.css"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { BACKEND_URL } from "../../CONST"
+import toast from "react-hot-toast"
+
 export default function Register() {
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     //so that it doesnt referesh on form submission
     setError(false);
     try {
+      setIsLoading(true)
       const res = await axios.post(`${BACKEND_URL}/auth/register`, {
         username,
         email,
         password,
       });
-      res.data && window.location.replace("/login")
+      // res.data && window.location.replace("/login")
       // alert("User registration successfull");
+      res.data && navigate("/login")
+      toast.success("User Registered")
     }
     catch (err) {
       setError(true)
+      toast.error("Error while registering")
+    }
+    finally {
+      setIsLoading(false)
     }
   };
   return (
@@ -49,7 +60,7 @@ export default function Register() {
           onChange={e => setPassword(e.target.value)}
 
         />
-        <button className="registerButton" type="submit">Register</button>
+        <button className="registerButton" type="submit">{isLoading ? "Loading..." : "Register"}</button>
       </form>
       <span className="b3">Already registered?
         <button className="registerLoginButton">

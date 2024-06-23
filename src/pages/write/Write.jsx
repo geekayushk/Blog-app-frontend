@@ -3,12 +3,16 @@ import "./write.css"
 import axios from "axios"
 import { Context } from "../../context/Context"
 import { BACKEND_URL } from "../../CONST"
+import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
 
 export default function Write() {
+  const navigate = useNavigate()
   const [title, setTitle] = useState("")
   const [desc, setDesc] = useState("")
   const [file, setFile] = useState(null)
   const { user } = useContext(Context);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,13 +35,19 @@ export default function Write() {
       }
     }
     try {
+      setIsLoading(true);
       const res = await axios.post(`${BACKEND_URL}/posts`, newPost)
-      window.location.replace("/post/" + res.data._id)
+      // window.location.replace("/post/" + res.data._id)
+      navigate(`/post/${res.data._id}`)
+      toast.success("Post Published Succesfully")
     }
     catch (err) {
       console.log(err)
+      toast.error("Post Not Published")
     }
-
+    finally {
+      setIsLoading(false);
+    }
   }
   return (
     <div className="write">
@@ -63,6 +73,7 @@ export default function Write() {
             className='writeInput'
             autoFocus={true}
             onChange={e => setTitle(e.target.value)}
+
           />
 
         </div>
@@ -74,7 +85,7 @@ export default function Write() {
             onChange={e => setDesc(e.target.value)}
           ></textarea>
         </div>
-        <button className="writeSubmit" type="submit">Publish</button>
+        <button className="writeSubmit" type="submit" disabled={isLoading}>{isLoading ? "Loading..." : 'Publish'}</button>
       </form>
     </div>
   )
